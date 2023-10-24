@@ -7,6 +7,8 @@ import edu.up.cs301.game.infoMsg.GameState;
 
 import android.util.Log;
 
+import java.util.Random;
+
 // dummy comment, to see if commit and push work from srvegdahl account
 
 /**
@@ -17,11 +19,13 @@ import android.util.Log;
  */
 public class PigLocalGame extends LocalGame {
 
+    private PigGameState pigGameState;
+
     /**
      * This ctor creates a new game state
      */
     public PigLocalGame() {
-        //TODO  You will implement this constructor
+        pigGameState = new PigGameState();
     }
 
     /**
@@ -29,7 +33,9 @@ public class PigLocalGame extends LocalGame {
      */
     @Override
     protected boolean canMove(int playerIdx) {
-        //TODO  You will implement this method
+        if(pigGameState.getPlayerId() == playerIdx){
+            return true;
+        }
         return false;
     }
 
@@ -41,6 +47,38 @@ public class PigLocalGame extends LocalGame {
     @Override
     protected boolean makeMove(GameAction action) {
         //TODO  You will implement this method
+        if(action instanceof PigHoldAction){
+           //int turn = pigGameState.getPlayerId();
+           int whoisasking = getPlayerIdx(action.getPlayer());
+           int numPlayers = players.length;
+
+            if(canMove(whoisasking)){
+                if(whoisasking == 0) {
+                    int new0Score = pigGameState.getCurrentTotal() + pigGameState.getPlayer0Score();
+                    pigGameState.setPlayer0Score(new0Score);
+                    pigGameState.setCurrentTotal(0);
+                    return true;
+                }
+                else if(whoisasking == 1){
+                    int new1Score = pigGameState.getCurrentTotal() + pigGameState.getPlayer1Score();
+                    pigGameState.setPlayer0Score(new1Score);
+                    pigGameState.setCurrentTotal(0);
+                    return true;
+                }
+                if(numPlayers == 2){
+                    if(whoisasking == 0){
+                        pigGameState.setPlayerId(1);
+                    }
+                    else{
+                        pigGameState.setPlayerId(0);
+                    }
+                }
+            }
+        }
+        else if(action instanceof PigRollAction){
+            Random rand = new Random();
+
+        }
         return false;
     }//makeMove
 
